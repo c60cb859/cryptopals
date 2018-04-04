@@ -72,6 +72,19 @@ class CryptoChallengeSet1(unittest.TestCase):
 
         self.assertEqual(result, cipher_hex)
 
+    def test_breaking_repeating_key_xor(self):
+        result = 'Terminator X: Bring the noise'
+
+        with open('../files/6.txt') as f:
+            base64_cipher_text = ''
+            for line in f:
+                base64_cipher_text += line.rstrip('\n')
+        byte_data = dc.base64_to_bytes(base64_cipher_text)
+
+        text, key = ba.break_repeating_xor(byte_data)
+
+        self.assertEqual(result, key)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -8,7 +8,7 @@ import crypto_tools.firness_functions as fit
 
 def break_one_byte_xor(byte_data):
     score = 1000000
-    best_string = ''
+    best_text = ''
     key = ''
 
     for num in range(255):

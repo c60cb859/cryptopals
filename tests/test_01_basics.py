@@ -5,6 +5,7 @@ import unittest
 import crypto_tools.data_conversion as dc
 import crypto_tools.byte_operations as bo
 import crypto_tools.breaking_algorithms as ba
+import crypto_tools.firness_functions as fit
 
 
 class CryptoChallengeSet1(unittest.TestCase):
@@ -40,6 +41,36 @@ class CryptoChallengeSet1(unittest.TestCase):
 
         self.assertEqual(result, best_string)
         self.assertEqual(result_key, key)
+
+    def test_detect_single_character_xor(self):
+        result = "Now that the party is jumping\n"
+        result_key = '5'
+
+        with open('../files/4.txt') as f:
+            score = 10000
+            best_string = ''
+            for line in f:
+                hex_string = line.rstrip('\n')
+                byte_data = dc.hex_to_bytes(hex_string)
+                string, temp_key = ba.break_one_byte_xor(byte_data)
+                temp_score = fit.score_english_text(string)
+                if temp_score > score:
+                    continue
+                score = temp_score
+                best_string = string
+                key = temp_key
+
+        self.assertEqual(result, best_string)
+        self.assertEqual(result_key, key)
+
+    def test_implement_repeating_key_xor(self):
+        result = '0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f'
+        key = dc.utf8_to_bytes('ICE')
+        text = dc.utf8_to_bytes("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal")
+        cipher = bo.repeating_key_xor(text, key)
+        cipher_hex = dc.bytes_to_hex(cipher)
+
+        self.assertEqual(result, cipher_hex)
 
 
 if __name__ == '__main__':

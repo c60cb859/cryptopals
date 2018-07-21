@@ -1,6 +1,5 @@
 #!/bin/python3
 
-
 import unittest
 import crypto_tools.data_conversion as dc
 import crypto_tools.firness_functions as fit

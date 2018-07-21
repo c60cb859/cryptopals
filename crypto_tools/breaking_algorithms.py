@@ -1,6 +1,5 @@
 #!/bin/python3
 
-
 import crypto_tools.byte_operations as bo
 import crypto_tools.data_conversion as dc
 import crypto_tools.firness_functions as fit
@@ -22,7 +21,7 @@ def break_one_byte_xor(byte_data):
         score = temp_score
         best_text = text
         key = dc.bytes_to_utf8(byte)
-        
+
     return best_text, key
 
 

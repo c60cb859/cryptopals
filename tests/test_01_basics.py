@@ -78,11 +78,9 @@ class CryptoChallengeSet1(unittest.TestCase):
         result = 'Terminator X: Bring the noise'
 
         with open('files/6.txt') as f:
-            base64_cipher_text = ''
-            for line in f:
-                base64_cipher_text += line.rstrip('\n')
-        byte_data = dc.base64_to_bytes(base64_cipher_text)
+            base64_cipher_text = f.read().replace('\n', '')
 
+        byte_data = dc.base64_to_bytes(base64_cipher_text)
         text, key = ba.break_repeating_xor(byte_data)
 
         self.assertEqual(result, key)
@@ -91,12 +89,10 @@ class CryptoChallengeSet1(unittest.TestCase):
         with open('files/7_result.txt') as f:
             result = f.read()
 
-        key = 'YELLOW SUBMARINE'
-
         with open('files/7.txt') as f:
-            base64_cipher_text = ''
-            for line in f:
-                base64_cipher_text += line.rstrip('\n')
+            base64_cipher_text = f.read().replace('\n', '')
+
+        key = 'YELLOW SUBMARINE'
         byte_data = dc.base64_to_bytes(base64_cipher_text)
         cleartext = dc.bytes_to_utf8(aes.dec_aes_ecb(key, byte_data))
 

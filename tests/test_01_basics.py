@@ -5,10 +5,11 @@ import crypto_tools.data_conversion as dc
 import crypto_tools.byte_operations as bo
 import crypto_tools.breaking_algorithms as ba
 import crypto_tools.firness_functions as fit
+import crypto_tools.aes_ecb as aes
 
 
 class CryptoChallengeSet1(unittest.TestCase):
-    def test_convert_hex_to_string(self):
+    def test_convert_hex_to_base64(self):
         result = 'SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t'
         hex_string = '49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d'
 
@@ -45,7 +46,7 @@ class CryptoChallengeSet1(unittest.TestCase):
         result = "Now that the party is jumping\n"
         result_key = '5'
 
-        with open('../files/4.txt') as f:
+        with open('files/4.txt') as f:
             score = 10000
             best_string = ''
             for line in f:
@@ -63,9 +64,11 @@ class CryptoChallengeSet1(unittest.TestCase):
         self.assertEqual(result_key, key)
 
     def test_implement_repeating_key_xor(self):
-        result = '0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f'
+        result = '0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a2622632427276527' +\
+                 '2a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f'
         key = dc.utf8_to_bytes('ICE')
-        text = dc.utf8_to_bytes("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal")
+        text = dc.utf8_to_bytes("Burning 'em, if you ain't quick and nimble\n" +
+                                'I go crazy when I hear a cymbal')
         cipher = bo.repeating_key_xor(text, key)
         cipher_hex = dc.bytes_to_hex(cipher)
 
@@ -74,7 +77,7 @@ class CryptoChallengeSet1(unittest.TestCase):
     def test_breaking_repeating_key_xor(self):
         result = 'Terminator X: Bring the noise'
 
-        with open('../files/6.txt') as f:
+        with open('files/6.txt') as f:
             base64_cipher_text = ''
             for line in f:
                 base64_cipher_text += line.rstrip('\n')
@@ -83,6 +86,21 @@ class CryptoChallengeSet1(unittest.TestCase):
         text, key = ba.break_repeating_xor(byte_data)
 
         self.assertEqual(result, key)
+
+    def test_aes_in_ecb_mode(self):
+        with open('files/7_result.txt') as f:
+            result = f.read()
+
+        key = 'YELLOW SUBMARINE'
+
+        with open('files/7.txt') as f:
+            base64_cipher_text = ''
+            for line in f:
+                base64_cipher_text += line.rstrip('\n')
+        byte_data = dc.base64_to_bytes(base64_cipher_text)
+        cleartext = dc.bytes_to_utf8(aes.dec_aes_ecb(key, byte_data))
+
+        self.assertEqual(result, cleartext)
 
 
 if __name__ == '__main__':

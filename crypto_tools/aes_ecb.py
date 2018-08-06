@@ -47,3 +47,12 @@ def detect_ecb_mode(block_size, cipher):
     if len(duplicates) > 0:
         return True
     return False
+
+
+def padding_pkcs7(block_size, cleartext):
+    padding_lenght = block_size - len(cleartext) % block_size
+    padding = ('\\x' + format(padding_lenght, '02x')) * padding_lenght
+
+    if padding_lenght == 20:
+        return cleartext
+    return cleartext + padding

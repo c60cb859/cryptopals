@@ -92,7 +92,7 @@ class CryptoChallengeSet1(unittest.TestCase):
         with open('files/7.txt') as f:
             base64_cipher_text = f.read().replace('\n', '')
 
-        key = 'YELLOW SUBMARINE'
+        key = dc.utf8_to_bytes('YELLOW SUBMARINE')
         byte_data = dc.base64_to_bytes(base64_cipher_text)
         cleartext = dc.bytes_to_utf8(aes.dec_aes_ecb(key, byte_data))
 
@@ -109,7 +109,8 @@ class CryptoChallengeSet1(unittest.TestCase):
             data = f.read().split('\n')[:-1]
 
         for cipher in data:
-            if aes.detect_ecb_mode(block_size, cipher):
+            byte_cipher = dc.utf8_to_bytes(cipher)
+            if aes.detect_ecb_mode(block_size, byte_cipher):
                 ecb_cipher = cipher
                 break
 

@@ -1,8 +1,9 @@
 #!/bin/python3
 
 import unittest
-import crypto_tools.data_conversion as dc
 import crypto_tools.firness_functions as fit
+
+from crypto_tools.data_conversion import UTF8Converter
 
 
 class FitnessFunctions(unittest.TestCase):
@@ -16,8 +17,8 @@ class FitnessFunctions(unittest.TestCase):
 
     def test_hamming_distance(self):
         result = 37
-        text1 = dc.utf8_to_bytes('this is a test')
-        text2 = dc.utf8_to_bytes('wokka wokka!!!')
+        text1 = UTF8Converter().decode('this is a test')
+        text2 = UTF8Converter().decode('wokka wokka!!!')
 
         edit_distance = fit.hamming_distance(text1, text2)
 

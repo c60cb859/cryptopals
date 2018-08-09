@@ -2,7 +2,8 @@
 
 import unittest
 import crypto_tools.aes_ecb as aes
-import crypto_tools.data_conversion as dc
+
+from crypto_tools.data_conversion import UTF8Converter
 
 
 class AesEcb(unittest.TestCase):
@@ -14,9 +15,9 @@ class AesEcb(unittest.TestCase):
         result = 'A' * num + padding
         cleartext = 'A' * num
 
-        byte_cleartext = dc.utf8_to_bytes(cleartext)
+        byte_cleartext = UTF8Converter().decode(cleartext)
         byte_padded_cleartext = aes.padding_pkcs7(block_size, byte_cleartext)
-        padded_cleartext = dc.bytes_to_utf8(byte_padded_cleartext)
+        padded_cleartext = UTF8Converter().encode(byte_padded_cleartext)
 
         self.assertEqual(result, padded_cleartext)
 
@@ -28,9 +29,9 @@ class AesEcb(unittest.TestCase):
         result = 'A' * num + padding
         cleartext = 'A' * num
 
-        byte_cleartext = dc.utf8_to_bytes(cleartext)
+        byte_cleartext = UTF8Converter().decode(cleartext)
         byte_padded_cleartext = aes.padding_pkcs7(block_size, byte_cleartext)
-        padded_cleartext = dc.bytes_to_utf8(byte_padded_cleartext)
+        padded_cleartext = UTF8Converter().encode(byte_padded_cleartext)
 
         self.assertEqual(result, padded_cleartext)
 
@@ -42,9 +43,9 @@ class AesEcb(unittest.TestCase):
         result = 'A' * num + padding
         cleartext = 'A' * num
 
-        byte_cleartext = dc.utf8_to_bytes(cleartext)
+        byte_cleartext = UTF8Converter().decode(cleartext)
         byte_padded_cleartext = aes.padding_pkcs7(block_size, byte_cleartext)
-        padded_cleartext = dc.bytes_to_utf8(byte_padded_cleartext)
+        padded_cleartext = UTF8Converter().encode(byte_padded_cleartext)
 
         self.assertEqual(result, padded_cleartext)
 
@@ -55,9 +56,9 @@ class AesEcb(unittest.TestCase):
         result = 'A' * num
         cleartext = 'A' * num
 
-        byte_cleartext = dc.utf8_to_bytes(cleartext)
+        byte_cleartext = UTF8Converter().decode(cleartext)
         byte_padded_cleartext = aes.padding_pkcs7(block_size, byte_cleartext)
-        padded_cleartext = dc.bytes_to_utf8(byte_padded_cleartext)
+        padded_cleartext = UTF8Converter().encode(byte_padded_cleartext)
 
         self.assertEqual(result, padded_cleartext)
 
@@ -68,9 +69,9 @@ class AesEcb(unittest.TestCase):
         result = 'A' * num
         cleartext = 'A' * num
 
-        byte_cleartext = dc.utf8_to_bytes(cleartext)
+        byte_cleartext = UTF8Converter().decode(cleartext)
         byte_padded_cleartext = aes.padding_pkcs7(block_size, byte_cleartext)
-        padded_cleartext = dc.bytes_to_utf8(byte_padded_cleartext)
+        padded_cleartext = UTF8Converter().encode(byte_padded_cleartext)
 
         self.assertEqual(result, padded_cleartext)
 

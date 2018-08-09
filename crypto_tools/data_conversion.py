@@ -3,40 +3,56 @@
 import base64
 import codecs
 
-
-def hex_to_bytes(hex_string):
-    byte_data = bytearray.fromhex(hex_string)
-    return byte_data
+from math import floor, ceil, log2
 
 
-def base64_to_bytes(base64_string):
-    byte_data = base64.b64decode(base64_string)
-    return byte_data
+class DataConverter:
+    def encode(self, data):
+        '''Encode take a bytearray and convert it to another type, and returns it'''
+        pass
+
+    def decode(self, data):
+        '''Decode takes data and convert it to a bytearray, and returns it'''
+        pass
 
 
-def utf8_to_bytes(utf8_string):
-    byte_data = utf8_string.encode('utf-8')
-    return byte_data
+class HexConverter(DataConverter):
+    def encode(self, data):
+        hex_string = data.hex()
+        return hex_string
+
+    def decode(self, data):
+        byte_data = bytearray.fromhex(data)
+        return byte_data
 
 
-def int_to_single_byte(integer):
-    if integer > 255:
-        raise ValueError('input to large')
-    single_byte = bytes([integer])
-    return single_byte
+class Base64Converter(DataConverter):
+    def encode(self, data):
+        base64_string = codecs.encode(data, 'base64')
+        utf8_printable = base64_string.decode('utf-8')[:-1]
+        return utf8_printable
+
+    def decode(self, data):
+        byte_data = base64.b64decode(data)
+        return byte_data
 
 
-def bytes_to_hex(byte_data):
-    hex_string = byte_data.hex()
-    return hex_string
+class UTF8Converter(DataConverter):
+    def encode(self, data):
+        utf8_string = data.decode('latin-1')
+        return utf8_string
+
+    def decode(self, data):
+        byte_data = data.encode('utf-8')
+        return byte_data
 
 
-def bytes_to_base64(byte_data):
-    base64_string = codecs.encode(byte_data, 'base64')
-    utf8_printable = base64_string.decode('utf-8')[:-1]
-    return utf8_printable
+class IntConverter(DataConverter):
+    def encode(self, data):
+        return int.from_bytes(data, byteorder='big')
 
-
-def bytes_to_utf8(byte_data):
-    utf8_string = byte_data.decode('latin-1')
-    return utf8_string
+    def decode(self, data):
+        if data == 0:
+            return bytearray([data])
+        size = ceil(floor(log2(data) + 1)/8)
+        return int.to_bytes(data, size, byteorder='big')

@@ -52,7 +52,8 @@ def dec_aes_cbc(ciphertext, key, iv=0, block_size=16):
 
 key = 'YELLOW SUBMARINE'
 
-cleartext = 'CBC mode is a block cipher mode that allows us to encrypt irregularly-sized messages, despite the fact that a block cipher natively only transforms individual blocks.'
+cleartext = 'CBC mode is a block cipher mode that allows us to encrypt irregularly-sized messages,' +\
+            'despite the fact that a block cipher natively only transforms individual blocks.'
 byte_cleartext = dc.utf8_to_bytes(cleartext)
 
 dec_cleartext = dec_aes_cbc(enc_aes_cbc(byte_cleartext, key), key)

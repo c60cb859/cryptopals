@@ -1,7 +1,6 @@
 #!/bin/python3
 
 import unittest
-import crypto_tools.byte_operations as bo
 
 from crypto_tools.byte_operations import ByteData
 from crypto_tools.data_conversion import HexConverter
@@ -19,29 +18,29 @@ class ByteOperations(unittest.TestCase):
         self.assertEqual(result, xor)
 
     def test_one_byte_xor(self):
-        result = bytes([0xbc, 0xbc, 0xbc])
-        byte = bytes([0x16])
-        byte_data = bytes([0xaa, 0xaa, 0xaa])
+        result = ByteData(bytes([0xbc, 0xbc, 0xbc]))
+        byte = ByteData(bytes([0x16]))
+        byte_data = ByteData(bytes([0xaa, 0xaa, 0xaa]))
 
-        xor = bo.one_byte_xor(byte_data, byte)
+        xor = byte_data.repeating_key_xor(byte)
 
         self.assertEqual(result, xor)
 
     def test_repeating_key_xor_encrypt(self):
         result = '0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20'
-        key = UTF8Converter().decode('ICE')
-        text = UTF8Converter().decode("Burning 'em, if you ain't quick and nimble")
-        cipher = bo.repeating_key_xor(text, key)
-        cipher_hex = HexConverter().encode(cipher)
+        key = ByteData('ICE', UTF8Converter())
+        text = ByteData("Burning 'em, if you ain't quick and nimble", UTF8Converter())
+        cipher = text.repeating_key_xor(key)
+        cipher_hex = cipher.encode(HexConverter())
         self.assertEqual(result, cipher_hex)
 
     def test_repeating_key_xor_decrypt(self):
         result = "Burning 'em, if you ain't quick and nimble"
-        key = UTF8Converter().decode('ICE')
-        cipher = HexConverter().decode(
-                '0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20')
-        byte_text = bo.repeating_key_xor(cipher, key)
-        text = UTF8Converter().encode(byte_text)
+        key = ByteData('ICE', UTF8Converter())
+        cipher = ByteData('0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20',
+                          HexConverter())
+        byte_text = cipher.repeating_key_xor(key)
+        text = byte_text.encode(UTF8Converter())
         self.assertEqual(result, text)
 
 

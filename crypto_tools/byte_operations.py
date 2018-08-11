@@ -1,6 +1,7 @@
 #!/bin/python3
 
 from itertools import cycle
+from crypto_tools.data_conversion import IntConverter
 
 
 class ByteData:
@@ -43,29 +44,17 @@ class ByteData:
     def encode(self, converter):
         return converter.encode(self._bytes)
 
+    def repeating_key_xor(self, key):
+        key_ring = cycle(key)
+        xor_data = ByteData()
+
+        for byte in self:
+            xor_data += ByteData(byte ^ next(key_ring), IntConverter())
+
+        return xor_data
+
     def pkcs7_pad(self, block_size):
         padding_lenght = (block_size - len(self) % block_size) % block_size
         padding = ByteData(bytes([padding_lenght]) * padding_lenght)
 
         return self + padding
-
-
-def one_byte_xor(byte_data, byte):
-    if len(byte) > 1:
-        raise ValueError('byte input is more than one byte')
-    xor_byte_data = bytearray()
-
-    for byte_d in byte_data:
-        xor_byte_data.append(byte_d ^ byte[0])
-
-    return xor_byte_data
-
-
-def repeating_key_xor(byte_data, key):
-    key_ring = cycle(key)
-    xor_byte_data = bytearray()
-
-    for byte in byte_data:
-        xor_byte_data.append(byte ^ next(key_ring))
-
-    return xor_byte_data

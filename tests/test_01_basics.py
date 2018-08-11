@@ -7,7 +7,6 @@ from crypto_tools.data_conversion import Base64Converter
 from crypto_tools.data_conversion import UTF8Converter
 from crypto_tools.byte_operations import ByteData
 
-import crypto_tools.byte_operations as bo
 import crypto_tools.breaking_algorithms as ba
 import crypto_tools.firness_functions as fit
 import crypto_tools.aes_ecb as aes
@@ -37,28 +36,26 @@ class CryptoChallengeSet1(unittest.TestCase):
         self.assertEqual(result, hex_xor)
 
     def test_single_byte_xor_chiper(self):
-        result = "Cooking MC's like a pound of bacon"
-        result_key = 'X'
-        hex_string = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'
-        byte_data = HexConverter().decode(hex_string)
+        result = ByteData("Cooking MC's like a pound of bacon", UTF8Converter())
+        result_key = ByteData('X', UTF8Converter())
+        data = ByteData('1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736', HexConverter())
 
-        best_string, key = ba.break_one_byte_xor(byte_data)
+        best_string, key = ba.break_one_byte_xor(data)
 
         self.assertEqual(result, best_string)
         self.assertEqual(result_key, key)
 
     def test_detect_single_character_xor(self):
-        result = "Now that the party is jumping\n"
-        result_key = '5'
+        result = ByteData("Now that the party is jumping\n", UTF8Converter())
+        result_key = ByteData('5', UTF8Converter())
 
         with open('files/4.txt') as f:
             score = 10000
-            best_string = ''
+            best_string = ByteData()
             for line in f:
-                hex_string = line.rstrip('\n')
-                byte_data = HexConverter().decode(hex_string)
-                string, temp_key = ba.break_one_byte_xor(byte_data)
-                temp_score = fit.score_english_text(string)
+                data = ByteData(line.rstrip('\n'), HexConverter())
+                string, temp_key = ba.break_one_byte_xor(data)
+                temp_score = fit.score_english_text(string.encode(UTF8Converter()))
                 if temp_score > score:
                     continue
                 score = temp_score
@@ -69,24 +66,24 @@ class CryptoChallengeSet1(unittest.TestCase):
         self.assertEqual(result_key, key)
 
     def test_implement_repeating_key_xor(self):
-        result = '0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a2622632427276527' +\
-                 '2a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f'
-        key = UTF8Converter().decode('ICE')
-        text = UTF8Converter().decode("Burning 'em, if you ain't quick and nimble\n" +
-                                      'I go crazy when I hear a cymbal')
-        cipher = bo.repeating_key_xor(text, key)
-        cipher_hex = HexConverter().encode(cipher)
+        result = ByteData('0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a2622632427276527' +
+                          '2a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f',
+                          HexConverter())
+        key = ByteData('ICE', UTF8Converter())
+        text = ByteData("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal",
+                        UTF8Converter())
+        cipher = text.repeating_key_xor(key)
 
-        self.assertEqual(result, cipher_hex)
+        self.assertEqual(result, cipher)
 
     def test_breaking_repeating_key_xor(self):
-        result = 'Terminator X: Bring the noise'
+        result = ByteData('Terminator X: Bring the noise', UTF8Converter())
 
         with open('files/6.txt') as f:
             base64_cipher_text = f.read().replace('\n', '')
 
-        byte_data = Base64Converter().decode(base64_cipher_text)
-        text, key = ba.break_repeating_xor(byte_data)
+        data = ByteData(base64_cipher_text, Base64Converter())
+        text, key = ba.break_repeating_xor(data)
 
         self.assertEqual(result, key)
 

@@ -3,17 +3,18 @@
 import unittest
 import crypto_tools.byte_operations as bo
 
+from crypto_tools.byte_operations import ByteData
 from crypto_tools.data_conversion import HexConverter
 from crypto_tools.data_conversion import UTF8Converter
 
 
 class ByteOperations(unittest.TestCase):
-    def test_fixed_xor(self):
-        result = bytes([0xbc])
-        byte1 = bytes([0x16])
-        byte2 = bytes([0xaa])
+    def test_xor(self):
+        result = ByteData(bytes([0xbc]))
+        byte1 = ByteData(bytes([0x16]))
+        byte2 = ByteData(bytes([0xaa]))
 
-        xor = bo.fixed_xor(byte1, byte2)
+        xor = byte1 ^ byte2
 
         self.assertEqual(result, xor)
 

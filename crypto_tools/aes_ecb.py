@@ -1,18 +1,19 @@
 #!/bin/python3
 
 from Crypto.Cipher import AES
+from crypto_tools.byte_operations import ByteData
 
 
 def enc_aes_ecb(key, cleartext):
-    algrorithm = AES.new(key, AES.MODE_ECB)
-    cipher = algrorithm.encrypt(cleartext)
+    algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
+    cipher = ByteData(algrorithm.encrypt(cleartext.get_data()))
 
     return cipher
 
 
 def dec_aes_ecb(key, cipher):
-    algrorithm = AES.new(key, AES.MODE_ECB)
-    cleartext = algrorithm.decrypt(cipher)
+    algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
+    cleartext = ByteData(algrorithm.decrypt(cipher.get_data()))
 
     return cleartext
 

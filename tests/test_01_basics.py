@@ -5,6 +5,7 @@ import unittest
 from crypto_tools.data_conversion import HexConverter
 from crypto_tools.data_conversion import Base64Converter
 from crypto_tools.data_conversion import UTF8Converter
+from crypto_tools.byte_operations import ByteData
 
 import crypto_tools.byte_operations as bo
 import crypto_tools.breaking_algorithms as ba
@@ -27,11 +28,11 @@ class CryptoChallengeSet1(unittest.TestCase):
         hex_string1 = '1c0111001f010100061a024b53535009181c'
         hex_string2 = '686974207468652062756c6c277320657965'
 
-        byte_data1 = HexConverter().decode(hex_string1)
-        byte_data2 = HexConverter().decode(hex_string2)
+        data1 = ByteData(hex_string1, HexConverter())
+        data2 = ByteData(hex_string2, HexConverter())
 
-        byte_xor = bo.fixed_xor(byte_data1, byte_data2)
-        hex_xor = HexConverter().encode(byte_xor)
+        data_xor = data1 ^ data2
+        hex_xor = data_xor.encode(HexConverter())
 
         self.assertEqual(result, hex_xor)
 
@@ -96,11 +97,11 @@ class CryptoChallengeSet1(unittest.TestCase):
         with open('files/7.txt') as f:
             base64_cipher_text = f.read().replace('\n', '')
 
-        key = UTF8Converter().decode('YELLOW SUBMARINE')
-        byte_data = Base64Converter().decode(base64_cipher_text)
-        cleartext = UTF8Converter().encode(aes.dec_aes_ecb(key, byte_data))
+        key = ByteData('YELLOW SUBMARINE', UTF8Converter())
+        data = ByteData(base64_cipher_text, Base64Converter())
+        cleartext = aes.dec_aes_ecb(key, data)
 
-        self.assertEqual(result, cleartext)
+        self.assertEqual(result, cleartext.encode(UTF8Converter()))
 
     def test_detect_aes_in_ecb_mode(self):
         result = 'd880619740a8a19b7840a8a31c810a3d08649af70dc06f4fd5d2d69c744cd283e2dd052f6b641dbf' +\

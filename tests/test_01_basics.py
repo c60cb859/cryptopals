@@ -6,9 +6,9 @@ from crypto_tools.data_conversion import HexConverter
 from crypto_tools.data_conversion import Base64Converter
 from crypto_tools.data_conversion import UTF8Converter
 from crypto_tools.byte_operations import ByteData
+from crypto_tools.firness_functions import EnglishScore
 
 import crypto_tools.breaking_algorithms as ba
-import crypto_tools.firness_functions as fit
 import crypto_tools.aes_ecb as aes
 
 
@@ -55,7 +55,7 @@ class CryptoChallengeSet1(unittest.TestCase):
             for line in f:
                 data = ByteData(line.rstrip('\n'), HexConverter())
                 string, temp_key = ba.break_one_byte_xor(data)
-                temp_score = fit.score_english_text(string.encode(UTF8Converter()))
+                temp_score = EnglishScore().score(string.encode(UTF8Converter()))
                 if temp_score > score:
                     continue
                 score = temp_score

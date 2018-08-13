@@ -7,11 +7,14 @@ from .data_conversion import IntConverter
 
 from .data_score import EnglishScore
 
+from .repeating_xor import RepeatingXor
+
 __all__ = [
         'ByteData',
         'HexConverter',
         'Base64Converter',
         'UTF8Converter',
         'IntConverter',
-        'EnglishScore'
+        'EnglishScore',
+        'RepeatingXor'
         ]

@@ -7,8 +7,8 @@ from crypto_tools import Base64Converter
 from crypto_tools import UTF8Converter
 from crypto_tools import ByteData
 from crypto_tools import EnglishScore
+from crypto_tools import RepeatingXor
 
-import crypto_tools.breaking_algorithms as ba
 import crypto_tools.aes_ecb as aes
 
 
@@ -40,7 +40,10 @@ class CryptoChallengeSet1(unittest.TestCase):
         result_key = ByteData('X', UTF8Converter())
         data = ByteData('1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736', HexConverter())
 
-        best_string, key = ba.break_one_byte_xor(data)
+        repeating_xor = RepeatingXor(data, EnglishScore())
+        key = repeating_xor.break_one_byte_key()
+
+        best_string = data.repeating_key_xor(key)
 
         self.assertEqual(result, best_string)
         self.assertEqual(result_key, key)
@@ -52,10 +55,13 @@ class CryptoChallengeSet1(unittest.TestCase):
         with open('files/4.txt') as f:
             score = 10000
             best_string = ByteData()
+
             for line in f:
                 data = ByteData(line.rstrip('\n'), HexConverter())
-                string, temp_key = ba.break_one_byte_xor(data)
-                temp_score = EnglishScore().score(string.encode(UTF8Converter()))
+                cipher = RepeatingXor(data, EnglishScore())
+                temp_key = cipher.break_one_byte_key()
+                string = data.repeating_key_xor(temp_key)
+                temp_score = cipher.score
                 if temp_score > score:
                     continue
                 score = temp_score
@@ -82,8 +88,8 @@ class CryptoChallengeSet1(unittest.TestCase):
         with open('files/6.txt') as f:
             base64_cipher_text = f.read().replace('\n', '')
 
-        data = ByteData(base64_cipher_text, Base64Converter())
-        text, key = ba.break_repeating_xor(data)
+        data = RepeatingXor(ByteData(base64_cipher_text, Base64Converter()), EnglishScore())
+        key = data.break_multiple_byte_key()
 
         self.assertEqual(result, key)
 

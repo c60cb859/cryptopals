@@ -1,7 +1,6 @@
 #!/bin/python3
 
 from math import ceil
-from .data_conversion import IntConverter
 
 
 class ByteData:

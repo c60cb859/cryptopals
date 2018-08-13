@@ -2,7 +2,7 @@
 
 import unittest
 
-from crypto_tools.byte_operations import ByteData
+from crypto_tools.byte_data import ByteData
 from crypto_tools.data_conversion import HexConverter
 from crypto_tools.data_conversion import UTF8Converter
 
@@ -42,6 +42,15 @@ class ByteOperations(unittest.TestCase):
         byte_text = cipher.repeating_key_xor(key)
         text = byte_text.encode(UTF8Converter())
         self.assertEqual(result, text)
+
+    def test_hamming_distance(self):
+        result = 37
+        text1 = ByteData('this is a test', UTF8Converter())
+        text2 = ByteData('wokka wokka!!!', UTF8Converter())
+
+        edit_distance = text1.hamming_distance(text2)
+
+        self.assertEqual(result, edit_distance)
 
 
 if __name__ == '__main__':

@@ -58,3 +58,15 @@ class ByteData:
         padding = ByteData(bytes([padding_lenght]) * padding_lenght)
 
         return self + padding
+
+    def hamming_distance(self, data):
+        edit_distance = 0
+
+        for byte1, byte2 in zip(self._bytes, data):
+            bin1 = "{0:08b}".format(byte1)
+            bin2 = "{0:08b}".format(byte2)
+            for bit1, bit2 in zip(bin1, bin2):
+                if bit1 != bit2:
+                    edit_distance += 1
+
+        return edit_distance

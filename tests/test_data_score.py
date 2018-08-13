@@ -2,7 +2,7 @@
 
 import unittest
 
-from crypto_tools.data_score import EnglishScore
+from crypto_tools import EnglishScore
 
 
 class TestEnglishScore(unittest.TestCase):

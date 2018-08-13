@@ -2,11 +2,11 @@
 
 import unittest
 
-from crypto_tools.data_conversion import HexConverter
-from crypto_tools.data_conversion import Base64Converter
-from crypto_tools.data_conversion import UTF8Converter
-from crypto_tools.byte_data import ByteData
-from crypto_tools.data_score import EnglishScore
+from crypto_tools import HexConverter
+from crypto_tools import Base64Converter
+from crypto_tools import UTF8Converter
+from crypto_tools import ByteData
+from crypto_tools import EnglishScore
 
 import crypto_tools.breaking_algorithms as ba
 import crypto_tools.aes_ecb as aes

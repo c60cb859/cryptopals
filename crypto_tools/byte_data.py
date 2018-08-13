@@ -1,7 +1,7 @@
 #!/bin/python3
 
-from crypto_tools.data_conversion import IntConverter
 from math import ceil
+from .data_conversion import IntConverter
 
 
 class ByteData:

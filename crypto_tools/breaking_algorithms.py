@@ -3,10 +3,10 @@ import numpy
 
 import crypto_tools.cipher_operations as co
 
-from crypto_tools.data_conversion import UTF8Converter
-from crypto_tools.data_conversion import IntConverter
-from crypto_tools.byte_data import ByteData
-from crypto_tools.data_score import EnglishScore
+from .data_conversion import UTF8Converter
+from .data_conversion import IntConverter
+from .byte_data import ByteData
+from .data_score import EnglishScore
 
 
 def find_repeating_xor_key_size(data, min_key_size=2, max_key_size=40, number_of_blocks=4):

@@ -1,6 +1,6 @@
 #!/bin/python3
 
-from crypto_tools.data_conversion import IntConverter
+from .data_conversion import IntConverter
 
 
 def divide_cipher(byte_data, key_size):

@@ -1,7 +1,7 @@
 #!/bin/python3
 
 from Crypto.Cipher import AES
-from crypto_tools.byte_data import ByteData
+from .byte_data import ByteData
 
 
 def enc_aes_ecb(key, cleartext):

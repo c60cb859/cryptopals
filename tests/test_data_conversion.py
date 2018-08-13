@@ -3,10 +3,10 @@
 
 import unittest
 
-from crypto_tools.data_conversion import HexConverter
-from crypto_tools.data_conversion import Base64Converter
-from crypto_tools.data_conversion import UTF8Converter
-from crypto_tools.data_conversion import IntConverter
+from crypto_tools import HexConverter
+from crypto_tools import Base64Converter
+from crypto_tools import UTF8Converter
+from crypto_tools import IntConverter
 
 
 class TestHexConverter(unittest.TestCase):

@@ -3,7 +3,7 @@
 import unittest
 import crypto_tools.aes_ecb as aes
 
-from crypto_tools.data_conversion import UTF8Converter
+from crypto_tools import UTF8Converter
 
 
 class AesEcb(unittest.TestCase):

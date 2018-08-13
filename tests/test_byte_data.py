@@ -2,9 +2,9 @@
 
 import unittest
 
-from crypto_tools.byte_data import ByteData
-from crypto_tools.data_conversion import HexConverter
-from crypto_tools.data_conversion import UTF8Converter
+from crypto_tools import ByteData
+from crypto_tools import HexConverter
+from crypto_tools import UTF8Converter
 
 
 class ByteOperations(unittest.TestCase):

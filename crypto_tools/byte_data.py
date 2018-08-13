@@ -1,7 +1,7 @@
 #!/bin/python3
 
-from itertools import cycle
 from crypto_tools.data_conversion import IntConverter
+from math import ceil
 
 
 class ByteData:
@@ -16,6 +16,9 @@ class ByteData:
 
     def __add__(self, other):
         return ByteData(self._bytes + other._bytes)
+
+    def __mul__(self, interger):
+        return ByteData(self._bytes * interger)
 
     def __len__(self):
         return len(self._bytes)
@@ -45,11 +48,11 @@ class ByteData:
         return converter.encode(self._bytes)
 
     def repeating_key_xor(self, key):
-        key_ring = cycle(key)
-        xor_data = ByteData()
+        key_size = len(key)
+        data_size = len(self)
+        multiplier = ceil(data_size/key_size)
 
-        for byte in self:
-            xor_data += ByteData(byte ^ next(key_ring), IntConverter())
+        xor_data = self ^ (key * multiplier)[:data_size]
 
         return xor_data
 

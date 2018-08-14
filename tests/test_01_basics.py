@@ -114,15 +114,16 @@ class CryptoChallengeSet1(unittest.TestCase):
                  '9d11b0348542bb5708649af70dc06f4fd5d2d69c744cd2839475c9dfdbc1d46597949d9c7e82bf5a' +\
                  '08649af70dc06f4fd5d2d69c744cd28397a93eab8d6aecd566489154789a6b0308649af70dc06f4f' +\
                  'd5d2d69c744cd283d403180c98c8f6db1f2a3f9c4040deb0ab51b29933f2c123c58386b06fba186a'
-        block_size = 16
+        key_size = 16
 
         with open('files/8.txt') as f:
-            data = f.read().split('\n')[:-1]
+            ciphers = f.read().split('\n')[:-1]
 
-        for cipher in data:
-            byte_cipher = UTF8Converter().decode(cipher)
-            if aes.detect_ecb_mode(block_size, byte_cipher):
-                ecb_cipher = cipher
+        for cipher in ciphers:
+            data = ByteData(cipher, HexConverter())
+            cipher_data = AesECB(data)
+            if cipher_data.verify_ecb_mode(key_size):
+                ecb_cipher = data.encode(HexConverter())
                 break
 
         self.assertEqual(result, ecb_cipher)

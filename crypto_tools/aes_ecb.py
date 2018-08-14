@@ -20,7 +20,33 @@ class AesECB:
 
         return cleartext
 
+    def verify_ecb_mode(self, key_size):
+        seen = dict()
 
+        for num in range(0, len(self._data), key_size):
+            block = self._data[num:num+key_size].get_data()
+            if block not in seen:
+                seen[block] = 1
+            else:
+                seen[block] += 1
+
+        if len(seen) < (len(self._data) / key_size):
+            return True
+        return False
+
+
+def enc_aes_ecb(key, cleartext):
+    algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
+    cipher = ByteData(algrorithm.encrypt(cleartext.get_data()))
+
+    return cipher
+
+
+def dec_aes_ecb(key, cipher):
+    algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
+    cleartext = ByteData(algrorithm.decrypt(cipher.get_data()))
+
+    return cleartext
 
 
 def split_cipher(block_size, cipher):

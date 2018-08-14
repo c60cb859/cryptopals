@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 import unittest
 
@@ -9,8 +9,6 @@ from crypto_tools import ByteData
 from crypto_tools import EnglishScore
 from crypto_tools import RepeatingXor
 from crypto_tools import AesECB
-
-import crypto_tools.aes_ecb as aes
 
 
 class CryptoChallengeSet1(unittest.TestCase):

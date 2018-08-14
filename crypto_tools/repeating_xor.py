@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 from .data_conversion import UTF8Converter
 from .data_conversion import IntConverter
 from .byte_data import ByteData

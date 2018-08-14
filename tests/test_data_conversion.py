@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 '''This files contains unittests for the DataConverter classes'''
 
 import unittest

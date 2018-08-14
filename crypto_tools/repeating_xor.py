@@ -1,6 +1,4 @@
 #!/bin/python3
-import crypto_tools.cipher_operations as co
-
 from .data_conversion import UTF8Converter
 from .data_conversion import IntConverter
 from .byte_data import ByteData
@@ -58,16 +56,11 @@ class RepeatingXor:
         return best_key_size
 
     def break_multiple_byte_key(self):
+        key = ByteData()
         key_size = self.find_key_size()
 
-        divided_cipher = co.divide_cipher(self._data.get_data(), key_size)
-
-        transposed_cipher = co.transpose_cipher_list(divided_cipher)
-
-        key = ByteData()
-
-        for line in transposed_cipher:
-            byte_line = RepeatingXor(ByteData(line), self.data_score)
+        for num in range(key_size):
+            byte_line = RepeatingXor(self._data[num::key_size], self.data_score)
             key += byte_line.break_one_byte_key()
 
         return key

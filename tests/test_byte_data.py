@@ -7,7 +7,7 @@ from crypto_tools import HexConverter
 from crypto_tools import UTF8Converter
 
 
-class ByteOperations(unittest.TestCase):
+class TestByteData(unittest.TestCase):
     def test_xor(self):
         result = ByteData(bytes([0xbc]))
         byte1 = ByteData(bytes([0x16]))
@@ -51,6 +51,15 @@ class ByteOperations(unittest.TestCase):
         edit_distance = text1.hamming_distance(text2)
 
         self.assertEqual(result, edit_distance)
+
+    def test_pkcs7_padding(self):
+        result = ByteData(b'some text\x06\x06\x06\x06\x06\x06')
+        data = ByteData(b'some text')
+        block_size = 15
+
+        padded_data = data.pkcs7_pad(block_size)
+
+        self.assertEqual(result, padded_data)
 
 
 if __name__ == '__main__':

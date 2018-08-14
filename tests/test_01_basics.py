@@ -8,6 +8,7 @@ from crypto_tools import UTF8Converter
 from crypto_tools import ByteData
 from crypto_tools import EnglishScore
 from crypto_tools import RepeatingXor
+from crypto_tools import AesECB
 
 import crypto_tools.aes_ecb as aes
 
@@ -102,7 +103,9 @@ class CryptoChallengeSet1(unittest.TestCase):
 
         key = ByteData('YELLOW SUBMARINE', UTF8Converter())
         data = ByteData(base64_cipher_text, Base64Converter())
-        cleartext = aes.dec_aes_ecb(key, data)
+
+        cipher = AesECB(data)
+        cleartext = cipher.decrypt(key)
 
         self.assertEqual(result, cleartext.encode(UTF8Converter()))
 

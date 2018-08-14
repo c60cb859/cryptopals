@@ -4,18 +4,23 @@ from Crypto.Cipher import AES
 from .byte_data import ByteData
 
 
-def enc_aes_ecb(key, cleartext):
-    algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
-    cipher = ByteData(algrorithm.encrypt(cleartext.get_data()))
+class AesECB:
+    def __init__(self, data):
+        self._data = data
 
-    return cipher
+    def encrypt(self, key):
+        algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
+        cipher = ByteData(algrorithm.encrypt(self._data.get_data()))
+
+        return cipher
+
+    def decrypt(self, key):
+        algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
+        cleartext = ByteData(algrorithm.decrypt(self._data.get_data()))
+
+        return cleartext
 
 
-def dec_aes_ecb(key, cipher):
-    algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
-    cleartext = ByteData(algrorithm.decrypt(cipher.get_data()))
-
-    return cleartext
 
 
 def split_cipher(block_size, cipher):

@@ -1,3 +1,5 @@
+from .aes_ecb import AesECB
+
 from .byte_data import ByteData
 
 from .data_conversion import HexConverter
@@ -10,6 +12,7 @@ from .data_score import EnglishScore
 from .repeating_xor import RepeatingXor
 
 __all__ = [
+        'AesECB',
         'ByteData',
         'HexConverter',
         'Base64Converter',

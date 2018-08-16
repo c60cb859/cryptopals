@@ -29,7 +29,7 @@ class AesOracle:
     def _generate_random_padding(self):
         padding = ''
         printable_char = string.ascii_letters + string.digits + string.punctuation
-        for num in range(random.randint(5,10)):
+        for num in range(random.randint(5, 10)):
             padding += random.choice(printable_char)
 
         return ByteData(padding, UTF8Converter())

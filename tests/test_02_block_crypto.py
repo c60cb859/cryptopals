@@ -4,7 +4,9 @@ import unittest
 from crypto_tools import ByteData
 from crypto_tools import UTF8Converter
 from crypto_tools import Base64Converter
+from crypto_tools import AesECB
 from crypto_tools import AesCBC
+from crypto_tools import AesOracle
 
 
 class CryptoChallengeSet2(unittest.TestCase):
@@ -32,6 +34,22 @@ class CryptoChallengeSet2(unittest.TestCase):
         cleartext = cipher.decrypt(key)
 
         self.assertEqual(result, cleartext.encode(UTF8Converter()))
+
+    def test_ecb_cbc_detection_oracle(self):
+        with open('files/7_result.txt') as f:
+            data = ByteData(f.read(), UTF8Converter())
+        key_size = 16
+        test_count = 100
+
+        for num in range(test_count):
+            oracle = AesOracle(data)
+            cipher = AesECB(oracle.encrypt())
+            if cipher.verify_ecb_mode(key_size):
+                encryption = 'ECB'
+            else:
+                encryption = 'CBC'
+
+            self.assertEqual(oracle.encryption, encryption)
 
 
 if __name__ == '__main__':

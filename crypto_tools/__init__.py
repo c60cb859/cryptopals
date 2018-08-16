@@ -1,6 +1,8 @@
 from .aes import AesECB
 from .aes import AesCBC
 
+from .aes_oracle import AesOracle
+
 from .byte_data import ByteData
 
 from .data_conversion import HexConverter
@@ -15,6 +17,7 @@ from .repeating_xor import RepeatingXor
 __all__ = [
         'AesECB',
         'AesCBC',
+        'AesOracle',
         'ByteData',
         'HexConverter',
         'Base64Converter',

@@ -40,16 +40,13 @@ class BreakECBEncryption:
         self._find_cipher_stats()
 
     def _find_cipher_stats(self):
-        size = 0
+        self.cipher_size = len(backend.encrypt(''))
         for num in range(32):
             payload = 'A' * num
-            cipher_len = len(backend.encrypt(payload))
-            if size == 0:
-                size = cipher_len
-            elif cipher_len != size:
-                self.block_size = cipher_len - size
-                self.cipher_size = size
-                self.cipher_padding = num - 1
+            new_cipher_len = len(backend.encrypt(payload))
+            if new_cipher_len != self.cipher_size:
+                self.block_size = new_cipher_len - self.cipher_size
+                self.cipher_padding = len(payload) - 1
                 break
 
     def _build_payload_dict(self, known_cleartext):

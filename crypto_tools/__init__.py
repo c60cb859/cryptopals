@@ -3,6 +3,9 @@ from .aes import AesCBC
 
 from .aes_oracle import AesOracle
 
+from .break_ecb import BreakECBEncryption
+from .encryption_backend import ByteAtATimeECBSimple
+
 from .byte_data import ByteData
 
 from .data_conversion import HexConverter
@@ -18,6 +21,8 @@ __all__ = [
         'AesECB',
         'AesCBC',
         'AesOracle',
+        'BreakECBEncryption',
+        'ByteAtATimeECBSimple',
         'ByteData',
         'HexConverter',
         'Base64Converter',

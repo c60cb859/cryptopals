@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
 
-from Crypto.Cipher import AES
+from cryptography.hazmat.primitives.ciphers import Cipher
+from cryptography.hazmat.primitives.ciphers.algorithms import AES
+from cryptography.hazmat.primitives.ciphers.modes import ECB
+from cryptography.hazmat.backends import default_backend
 from .byte_data import ByteData
 
 
 class AesECB:
     def __init__(self, data):
         self._data = data
+        self.backend = default_backend()
 
     def encrypt(self, key):
-        algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
-        cipher = ByteData(algrorithm.encrypt(self._data.get_data()))
+        cipher = Cipher(AES(key.get_data()), ECB(), backend=self.backend)
+        encryptor = cipher.encryptor()
+        ciphertext = encryptor.update(self._data.get_data())
 
-        return cipher
+        return ByteData(ciphertext)
 
     def decrypt(self, key):
-        algrorithm = AES.new(key.get_data(), AES.MODE_ECB)
-        cleartext = ByteData(algrorithm.decrypt(self._data.get_data()))
+        cipher = Cipher(AES(key.get_data()), ECB(), backend=self.backend)
+        decryptor = cipher.decryptor()
+        cleartext = decryptor.update(self._data.get_data())
 
-        return cleartext
+        return ByteData(cleartext)
 
     def verify_ecb_mode(self, key_size):
         seen = dict()

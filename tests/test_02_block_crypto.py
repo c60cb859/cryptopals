@@ -8,6 +8,7 @@ from crypto_tools import AesECB
 from crypto_tools import AesCBC
 from crypto_tools import AesOracle
 from crypto_tools import ByteAtATimeECBSimple
+from crypto_tools import ByteAtATimeECBHarder
 from crypto_tools import BreakECBEncryption
 
 
@@ -59,6 +60,19 @@ class CryptoChallengeSet2(unittest.TestCase):
                           'IGp1c3QgZHJvdmUgYnkK', Base64Converter())
 
         backend = ByteAtATimeECBSimple()
+        break_ecb = BreakECBEncryption(backend)
+        if break_ecb.verify_ecb_mode():
+            cleartext = break_ecb.break_ecb()
+        data = ByteData(cleartext, UTF8Converter())
+
+        self.assertEqual(result, data)
+
+    def _byte_at_a_time_ecb_decryption_harder(self):
+        result = ByteData('Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaG' +
+                          'UgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJ' +
+                          'IGp1c3QgZHJvdmUgYnkK', Base64Converter())
+
+        backend = ByteAtATimeECBHarder()
         break_ecb = BreakECBEncryption(backend)
         if break_ecb.verify_ecb_mode():
             cleartext = break_ecb.break_ecb()

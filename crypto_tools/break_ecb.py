@@ -19,15 +19,16 @@ class BreakECBEncryption:
                 self.cipher_padding = len(payload) - 1
                 break
 
-    def _build_payload_dict(self, known_cleartext):
-        payload_dict = {}
+    def _find_payload_positions(self):
+        pass
+
+    def _match_byte(self, known_cleartext, match):
         for char in string.printable:
             payload = 'A' * (self.cipher_size - len(known_cleartext) - 1) + known_cleartext + char
             complete_cipher = self._backend.encrypt(payload)
             cuttet_cipher = complete_cipher[:self.cipher_size]
-            payload_dict[cuttet_cipher.get_data()] = payload
-
-        return payload_dict
+            if cuttet_cipher == match:
+                return char
 
     def verify_ecb_mode(self):
         payload = 'A' * self.block_size * 2
@@ -38,10 +39,8 @@ class BreakECBEncryption:
     def break_ecb(self):
         known_cleartext = ''
         for num in range(self.cipher_size - self.cipher_padding):
-            payload_dict = self._build_payload_dict(known_cleartext)
             payload = 'A' * (self.cipher_size - len(known_cleartext) - 1)
-
-            leaking = self._backend.encrypt(payload)[:self.cipher_size]
-            known_cleartext += payload_dict[leaking.get_data()][-1]
+            match = self._backend.encrypt(payload)[:self.cipher_size]
+            known_cleartext += self._match_byte(known_cleartext, match)
 
         return known_cleartext

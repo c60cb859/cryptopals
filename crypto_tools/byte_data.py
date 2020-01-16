@@ -61,6 +61,13 @@ class ByteData:
 
         return self + padding
 
+    def pkcs7_pad_remove(self):
+        if isinstance(self.get_data()[-1], int):
+            padding_lenght = self.get_data()[-1]
+            return self[:-1*padding_lenght]
+
+        return self
+
     def hamming_distance(self, data):
         edit_distance = 0
 

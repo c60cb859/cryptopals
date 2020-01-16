@@ -5,6 +5,8 @@ from .aes_oracle import AesOracle
 
 from .break_ecb import BreakECBEncryption
 from .encryption_backend import ByteAtATimeECBSimple
+from .encryption_backend import EncryptedCookieGenerator
+from .encryption_backend import ByteAtATimeECBHarder
 
 from .byte_data import ByteData
 
@@ -23,6 +25,8 @@ __all__ = [
         'AesOracle',
         'BreakECBEncryption',
         'ByteAtATimeECBSimple',
+        'ByteAtATimeECBHarder',
+        'EncryptedCookieGenerator',
         'ByteData',
         'HexConverter',
         'Base64Converter',

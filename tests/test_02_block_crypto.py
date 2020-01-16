@@ -67,7 +67,7 @@ class CryptoChallengeSet2(unittest.TestCase):
 
         self.assertEqual(result, data)
 
-    def _byte_at_a_time_ecb_decryption_harder(self):
+    def test_byte_at_a_time_ecb_decryption_harder(self):
         result = ByteData('Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaG' +
                           'UgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJ' +
                           'IGp1c3QgZHJvdmUgYnkK', Base64Converter())

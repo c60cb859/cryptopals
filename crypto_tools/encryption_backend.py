@@ -120,7 +120,7 @@ class ByteAtATimeECBHarder(EncryptionBackend):
     def _generate_random_prefix(self):
         prefix = ''
         printable_char = string.ascii_letters + string.digits + string.punctuation
-        for num in range(random.randint(0, self.key_size)):
+        for num in range(random.randint(0, self.key_size*3)):
             prefix += random.choice(printable_char)
 
         return ByteData(prefix, UTF8Converter())

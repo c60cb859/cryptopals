@@ -64,7 +64,11 @@ class ByteData:
     def pkcs7_pad_remove(self):
         if isinstance(self.get_data()[-1], int):
             padding_lenght = self.get_data()[-1]
-            return self[:-1*padding_lenght]
+            padding = self[-1*padding_lenght:]
+            if padding == ByteData(bytes([padding_lenght])*padding_lenght):
+                return self[:-1*padding_lenght]
+            else:
+                raise Exception('Data does not have valid pkcs7 padding: {}'.format(padding.get_data()))
 
         return self
 

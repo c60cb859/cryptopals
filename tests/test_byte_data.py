@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import unittest
+import pytest
 
 from crypto_tools import ByteData
 from crypto_tools import HexConverter
@@ -60,6 +61,30 @@ class TestByteData(unittest.TestCase):
         padded_data = data.pkcs7_pad(block_size)
 
         self.assertEqual(result, padded_data)
+
+    def test_pkcs7_padding_remove_correct(self):
+        result = ByteData(b'some text')
+        data = ByteData(b'some text\x06\x06\x06\x06\x06\x06')
+
+        padded_data = data.pkcs7_pad_remove()
+
+        self.assertEqual(result, padded_data)
+
+    def test_pkcs7_padding_remove_wrong_length(self):
+        result = "Data does not have valid pkcs7 padding: b't\x07\x07\x07\x07\x07\x07'"
+        data = ByteData(b'some text\x07\x07\x07\x07\x07\x07')
+
+        with pytest.raises(Exception) as info:
+            assert(data.pkcs7_pad_remove())
+            self.assertEqual(result, info)
+
+    def test_pkcs7_padding_remove_wrong_padding(self):
+        result = "Data does not have valid pkcs7 padding: b'\x01\x02\x03\x04\x05\x06'"
+        data = ByteData(b'some text\x01\x02\x03\x04\x05\x06')
+
+        with pytest.raises(Exception) as info:
+            assert(data.pkcs7_pad_remove())
+            self.assertEqual(result, info)
 
 
 if __name__ == '__main__':

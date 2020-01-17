@@ -7,6 +7,7 @@ from .break_ecb import BreakECBEncryption
 from .encryption_backend import ByteAtATimeECBSimple
 from .encryption_backend import EncryptedCookieGenerator
 from .encryption_backend import ByteAtATimeECBHarder
+from .encryption_backend import CBCBitFlippingAttack
 
 from .byte_data import ByteData
 
@@ -26,6 +27,7 @@ __all__ = [
         'BreakECBEncryption',
         'ByteAtATimeECBSimple',
         'ByteAtATimeECBHarder',
+        'CBCBitFlippingAttack',
         'EncryptedCookieGenerator',
         'ByteData',
         'HexConverter',

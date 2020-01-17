@@ -86,8 +86,9 @@ class CryptoChallengeSet1(unittest.TestCase):
 
         with open('files/6.txt') as f:
             base64_cipher_text = f.read().replace('\n', '')
+            cipher_data = ByteData(base64_cipher_text, Base64Converter())
 
-        data = RepeatingXor(ByteData(base64_cipher_text, Base64Converter()), EnglishScore())
+        data = RepeatingXor(cipher_data, EnglishScore())
         key = data.break_multiple_byte_key()
 
         self.assertEqual(result, key)

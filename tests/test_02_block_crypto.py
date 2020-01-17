@@ -10,6 +10,7 @@ from crypto_tools import AesCBC
 from crypto_tools import AesOracle
 from crypto_tools import ByteAtATimeECBSimple
 from crypto_tools import ByteAtATimeECBHarder
+from crypto_tools import EncryptedCookieGenerator
 from crypto_tools import BreakECBEncryption
 
 
@@ -67,6 +68,57 @@ class CryptoChallengeSet2(unittest.TestCase):
         data = ByteData(cleartext, UTF8Converter())
 
         self.assertEqual(result, data)
+
+    def test_ecb_cut_and_paste(self):
+        """
+        What is encrypted:
+            email=<user input>&uid=10&role=user
+        Goal:
+            have "role=admin"
+            "&" and "=" is stripped form the input
+        Method:
+          Step 1:
+            Create input so that "admin + padding" is in one block
+
+            Block size 16 bytes
+            |-------16-------|-------16-------|-------16-------|
+            |email=<user inpu|t>&uid=10&role=u|ser.............|
+            |email=AAAAAAAAAA|admin...........|&uid=10&role=use|r
+
+            user input should be 10 A's plus 'admin' plus pkcs7 padding
+
+          Step 2:
+            Create input so that "role=" is the end of a block and
+            "user + padding" is the only thing in the next block.
+
+            Block size 16 bytes
+            |-------16-------|-------16-------|-------16-------|
+            |email=<user inpu|t>&uid=10&role=u|ser
+            |email=AAAAAAAAAA|AAA&uid=10&role=|user
+
+            user input should be 13 A's
+
+          Step 3:
+            Replace the last block in the chiper from step 2
+            with the second block from the cipher in step 1
+            and return the modified cipher to the backend
+
+        """
+        result = 'admin'
+        backend = EncryptedCookieGenerator()
+        # Step 1
+        admin_input = 'A' * 10 + 'admin' + '\x0b' * 11
+        admin_cipher_block = backend.encrypt(admin_input)[16:16*2]
+
+        # Step 2
+        user_input = 'A' * 13
+        user_cipher = backend.encrypt(user_input)[:-16]
+
+        # Step 3
+        cipher = user_cipher + admin_cipher_block
+        data = backend.decrypt(cipher)
+
+        self.assertEqual(result, data['role'])
 
     def test_byte_at_a_time_ecb_decryption_harder(self):
         result = ByteData('Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaG' +

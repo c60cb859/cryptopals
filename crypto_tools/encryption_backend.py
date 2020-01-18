@@ -135,8 +135,12 @@ class CBCBitFlippingAttack(EncryptionBackend):
         pairs = serialized_string.split(';')
 
         for pair in pairs:
-            key, value = pair.split('=')
-            output[key] = value
+            try:
+                key, value = pair.split('=')
+            except ValueError:
+                pass
+            else:
+                output[key] = value
 
         return output
 

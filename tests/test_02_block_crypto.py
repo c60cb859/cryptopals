@@ -5,12 +5,14 @@ import pytest
 from crypto_tools import ByteData
 from crypto_tools import UTF8Converter
 from crypto_tools import Base64Converter
+from crypto_tools import HexConverter
 from crypto_tools import AesECB
 from crypto_tools import AesCBC
 from crypto_tools import AesOracle
 from crypto_tools import ByteAtATimeECBSimple
 from crypto_tools import ByteAtATimeECBHarder
 from crypto_tools import EncryptedCookieGenerator
+from crypto_tools import CBCBitFlippingAttack
 from crypto_tools import BreakECBEncryption
 
 
@@ -156,6 +158,52 @@ class CryptoChallengeSet2(unittest.TestCase):
         with pytest.raises(Exception) as info:
             assert(data.pkcs7_pad_remove())
             self.assertEqual(result, info)
+
+    def test_cbc_bitflipping(self):
+        """
+        What is encrypted:
+            comment1=cooking%20MCs;userdata=<user input>;comment2=%20like%20a%20pound%20of%20bacon
+        Goal:
+            have ";admin=true"
+            ";" and "=" is stripped form the input
+        Method:
+          Step 1:
+            Create evil input. To bypass the stripping of bad character
+            bit flip the evil input for those character.
+            Desired output:    A  A  A  A  A  ;  a  d  m  i  n  =  t  r  u  e
+            Bitflipping mask: 00 00 00 00 00 01 00 00 00 00 00 01 00 00 00 00
+
+          Step 2:
+            Encrypt the bitflipped input, and split the cipher in blocks
+            bitflip the block before the input block with the same mask
+
+          Step 3:
+            Decrypt the bitflipped cipher
+
+          The diagram bitflip.png illustrates this attack
+        """
+        result = 'true'
+        backend = CBCBitFlippingAttack()
+        # Step 1
+        evil_input = 'AAAAA;admin=true'
+        evil_data = ByteData(evil_input, UTF8Converter())
+
+        bitflip_mask = '00000000000100000000000100000000'
+        bitflip_data = ByteData(bitflip_mask, HexConverter())
+
+        xor_data = evil_data ^ bitflip_data
+        # Step 2
+        cipher = backend.encrypt(xor_data.encode(UTF8Converter()))
+        prefix_cipher = cipher[:16]
+        postfix_cipher = cipher[32:]
+        evil_block = cipher[16:32] ^ bitflip_data
+
+        evil_cihper = prefix_cipher + evil_block + postfix_cipher
+
+        # Step 3
+        data = backend.decrypt(evil_cihper)
+
+        self.assertEqual(result, data['admin'])
 
 
 if __name__ == '__main__':

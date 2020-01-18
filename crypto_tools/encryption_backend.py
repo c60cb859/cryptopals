@@ -166,3 +166,41 @@ class CBCBitFlippingAttack(EncryptionBackend):
         output = self._kv_deserialize(cleartext_no_pad.encode(UTF8Converter()))
 
         return output
+
+
+class CBCPaddingOracle(EncryptionBackend):
+    def __init__(self):
+        self.key_size = 16
+        self._key = self._generate_random_printable_key(self.key_size)
+        self._data = self._pick_random_string()
+
+    def _pick_random_string(self):
+        strings = ['MDAwMDAwTm93IHRoYXQgdGhlIHBhcnR5IGlzIGp1bXBpbmc=',
+                   'MDAwMDAxV2l0aCB0aGUgYmFzcyBraWNrZWQgaW4gYW5kIHRoZSBWZWdhJ3MgYXJlIHB1bXBpbic=',
+                   'MDAwMDAyUXVpY2sgdG8gdGhlIHBvaW50LCB0byB0aGUgcG9pbnQsIG5vIGZha2luZw==',
+                   'MDAwMDAzQ29va2luZyBNQydzIGxpa2UgYSBwb3VuZCBvZiBiYWNvbg==',
+                   'MDAwMDA0QnVybmluZyAnZW0sIGlmIHlvdSBhaW4ndCBxdWljayBhbmQgbmltYmxl',
+                   'MDAwMDA1SSBnbyBjcmF6eSB3aGVuIEkgaGVhciBhIGN5bWJhbA==',
+                   'MDAwMDA2QW5kIGEgaGlnaCBoYXQgd2l0aCBhIHNvdXBlZCB1cCB0ZW1wbw==',
+                   'MDAwMDA3SSdtIG9uIGEgcm9sbCwgaXQncyB0aW1lIHRvIGdvIHNvbG8=',
+                   'MDAwMDA4b2xsaW4nIGluIG15IGZpdmUgcG9pbnQgb2g=',
+                   'MDAwMDA5aXRoIG15IHJhZy10b3AgZG93biBzbyBteSBoYWlyIGNhbiBibG93']
+        string = random.choice(strings)
+
+        return ByteData(string, Base64Converter())
+
+    def encrypt(self):
+        crypto = AesCBC(self._data.pkcs7_pad(self.key_size))
+        cipher = crypto.encrypt(self._key)
+
+        return cipher
+
+    def decrypt(self, cipher):
+        cipher = AesCBC(cipher)
+        cleartext = cipher.decrypt(self._key)
+        try:
+            cleartext.pkcs7_pad_remove()
+        except Exception:
+            return False
+        else:
+            return True

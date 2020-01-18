@@ -8,6 +8,7 @@ from .encryption_backend import ByteAtATimeECBSimple
 from .encryption_backend import EncryptedCookieGenerator
 from .encryption_backend import ByteAtATimeECBHarder
 from .encryption_backend import CBCBitFlippingAttack
+from .encryption_backend import CBCPaddingOracle
 
 from .byte_data import ByteData
 
@@ -28,6 +29,7 @@ __all__ = [
         'ByteAtATimeECBSimple',
         'ByteAtATimeECBHarder',
         'CBCBitFlippingAttack',
+        'CBCPaddingOracle',
         'EncryptedCookieGenerator',
         'ByteData',
         'HexConverter',

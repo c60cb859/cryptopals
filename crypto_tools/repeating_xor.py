@@ -16,17 +16,16 @@ class RepeatingXor:
         self.score = 1000000
 
     def _test_key_size(self, key_size):
-        normalize_edit_distance = 0
-        divider = (1 / 2) / (self.number_of_blocks - 1) * self.number_of_blocks
+        normalize_edit_distance = list()
 
         for block_num1 in range(self.number_of_blocks):
             for block_num2 in range(block_num1 + 1, self.number_of_blocks):
                 edit_distance = self._data[key_size*block_num1:key_size*block_num1+key_size].hamming_distance(
                                 self._data[key_size*block_num2:key_size*block_num2+key_size])
 
-                normalize_edit_distance += edit_distance / key_size
+                normalize_edit_distance.append(edit_distance / key_size)
 
-        return normalize_edit_distance / divider
+        return sum(normalize_edit_distance)/len(normalize_edit_distance)
 
     def break_one_byte_key(self):
         key = ByteData()

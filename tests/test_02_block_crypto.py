@@ -69,7 +69,7 @@ class CryptoChallengeSet2(unittest.TestCase):
             cleartext = break_ecb.break_ecb()
         data = ByteData(cleartext, UTF8Converter())
 
-        self.assertEqual(result, data)
+        self.assertEqual(result, data.pkcs7_pad_remove())
 
     def test_ecb_cut_and_paste(self):
         """
@@ -133,7 +133,7 @@ class CryptoChallengeSet2(unittest.TestCase):
             cleartext = break_ecb.break_ecb()
         data = ByteData(cleartext, UTF8Converter())
 
-        self.assertEqual(result, data)
+        self.assertEqual(result, data.pkcs7_pad_remove())
 
     def test_pkcs7_padding_remove_correct(self):
         result = ByteData(b'ICE ICE BABY')

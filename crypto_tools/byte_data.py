@@ -57,7 +57,10 @@ class ByteData:
 
     def pkcs7_pad(self, block_size):
         padding_lenght = (block_size - len(self) % block_size) % block_size
-        padding = ByteData(bytes([padding_lenght]) * padding_lenght)
+        if padding_lenght == 0:
+            padding = ByteData(bytes([block_size] * block_size))
+        else:
+            padding = ByteData(bytes([padding_lenght]) * padding_lenght)
 
         return self + padding
 

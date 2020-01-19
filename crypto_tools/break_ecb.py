@@ -44,7 +44,8 @@ class BreakECBEncryption:
                 break
 
     def _match_byte(self, known_cleartext, match):
-        for char in string.printable:
+        for num in range(256):
+            char = chr(num)
             payload = 'A' * (self.cipher_size - len(known_cleartext) - 1 - self.payload_position) + known_cleartext + char
             complete_cipher = self._backend.encrypt(payload)
             cuttet_cipher = complete_cipher[self.payload_position:self.cipher_size]

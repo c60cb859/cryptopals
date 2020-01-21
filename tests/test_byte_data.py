@@ -9,7 +9,7 @@ from crypto_tools import UTF8Converter
 
 
 class TestByteData(unittest.TestCase):
-    def test_xor(self):
+    def test_xor_sigle_byte(self):
         result = ByteData(bytes([0xbc]))
         byte1 = ByteData(bytes([0x16]))
         byte2 = ByteData(bytes([0xaa]))
@@ -17,6 +17,29 @@ class TestByteData(unittest.TestCase):
         xor = byte1 ^ byte2
 
         self.assertEqual(result, xor)
+
+    def test_xor_multiple_bytes(self):
+        result = ByteData(b'\x04'*16)
+        byte1 = ByteData(b'\x04'*16)
+        byte2 = ByteData(b'\x00'*16)
+
+        xor = byte1 ^ byte2
+
+        self.assertEqual(result, xor)
+
+    def test_getitem(self):
+        result = ByteData(b'\x42')
+        byte = ByteData(b'\x00\x00\x00\x00\x42\x00\x00\x00')
+
+        self.assertEqual(result, byte[4])
+
+    def test_setitem(self):
+        result = ByteData(b'\x00\x01\x02\x03\x04\x05\x06\x07')
+        byte = ByteData(b'\x00\x00\x00\x03\x04\x05\x06\x07')
+        byte[1] = 1
+        byte[2] = b'\x02'
+
+        self.assertEqual(result, byte)
 
     def test_one_byte_xor(self):
         result = ByteData(bytes([0xbc, 0xbc, 0xbc]))

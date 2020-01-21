@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import string
 
 from crypto_tools import AesECB
 

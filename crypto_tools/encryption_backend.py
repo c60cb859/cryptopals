@@ -172,7 +172,7 @@ class CBCPaddingOracle(EncryptionBackend):
     def __init__(self):
         self.key_size = 16
         self._key = self._generate_random_printable_key(self.key_size)
-        self._data = self._pick_random_string()
+        self._random_data = self._pick_random_string()
 
     def _pick_random_string(self):
         strings = ['MDAwMDAwTm93IHRoYXQgdGhlIHBhcnR5IGlzIGp1bXBpbmc=',
@@ -189,9 +189,14 @@ class CBCPaddingOracle(EncryptionBackend):
 
         return ByteData(string, Base64Converter())
 
-    def encrypt(self):
-        crypto = AesCBC(self._data.pkcs7_pad(self.key_size))
-        cipher = crypto.encrypt(self._key)
+    def encrypt(self, cleartext=False):
+        if cleartext:
+            cleartext_data = ByteData(cleartext, UTF8Converter())
+            crypto = AesCBC(cleartext_data)
+            cipher = crypto.encrypt(self._key)
+        else:
+            crypto = AesCBC(self._random_data.pkcs7_pad(self.key_size))
+            cipher = crypto.encrypt(self._key)
 
         return cipher
 

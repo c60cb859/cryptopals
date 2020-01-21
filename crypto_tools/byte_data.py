@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 from math import ceil
+from .data_conversion import IntConverter
 
 
 class ByteData:
     def __init__(self, data=b'', converter=None):
         if converter is None:
-            self._bytes = data
+            self._bytes = bytearray(data)
         else:
             self._bytes = converter.decode(data)
 
@@ -20,13 +21,24 @@ class ByteData:
         return ByteData(self._bytes * interger)
 
     def __len__(self):
+        if isinstance(self._bytes, int):
+            return 1
         return len(self._bytes)
 
     def __iter__(self):
         return iter(self._bytes)
 
     def __getitem__(self, index):
+        data = self._bytes[index]
+        if isinstance(data, int):
+            return ByteData(self._bytes[index], IntConverter())
         return ByteData(self._bytes[index])
+
+    def __setitem__(self, index, value):
+        if isinstance(value, int):
+            self._bytes[index] = value
+        else:
+            self._bytes[index] = int.from_bytes(value, 'big')
 
     def __xor__(self, other):
         if len(self) != len(other):
@@ -61,7 +73,6 @@ class ByteData:
             padding = ByteData(bytes([block_size] * block_size))
         else:
             padding = ByteData(bytes([padding_lenght]) * padding_lenght)
-
         return self + padding
 
     def pkcs7_pad_remove(self):
@@ -70,9 +81,7 @@ class ByteData:
             padding = self[-1*padding_lenght:]
             if padding == ByteData(bytes([padding_lenght])*padding_lenght):
                 return self[:-1*padding_lenght]
-            else:
-                raise Exception('Data does not have valid pkcs7 padding: {}'.format(padding.get_data()))
-
+            raise Exception('Data does not have valid pkcs7 padding: {}'.format(padding.get_data()))
         return self
 
     def hamming_distance(self, data):

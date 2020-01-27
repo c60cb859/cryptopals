@@ -18,11 +18,9 @@ class DataConverter:
     '''
     def encode(self, data):
         '''Encode take a bytearray and convert it to another type, and returns it'''
-        pass
 
     def decode(self, data):
         '''Decode takes some data and convert it to a bytearray, and returns it'''
-        pass
 
 
 class HexConverter(DataConverter):

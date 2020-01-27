@@ -1,14 +1,18 @@
 from .aes import AesECB
 from .aes import AesCBC
+from .aes import AesCTR
 
 from .aes_oracle import AesOracle
 
 from .break_ecb import BreakECBEncryption
+from .break_cbc import BreakCBCEncryption
+
 from .encryption_backend import ByteAtATimeECBSimple
 from .encryption_backend import EncryptedCookieGenerator
 from .encryption_backend import ByteAtATimeECBHarder
 from .encryption_backend import CBCBitFlippingAttack
 from .encryption_backend import CBCPaddingOracle
+from .encryption_backend import CTRFixedNonce
 
 from .byte_data import ByteData
 
@@ -24,12 +28,15 @@ from .repeating_xor import RepeatingXor
 __all__ = [
         'AesECB',
         'AesCBC',
+        'AesCTR',
         'AesOracle',
         'BreakECBEncryption',
+        'BreakCBCEncryption',
         'ByteAtATimeECBSimple',
         'ByteAtATimeECBHarder',
         'CBCBitFlippingAttack',
         'CBCPaddingOracle',
+        'CTRFixedNonce',
         'EncryptedCookieGenerator',
         'ByteData',
         'HexConverter',

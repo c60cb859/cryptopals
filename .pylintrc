@@ -139,6 +139,7 @@ disable=print-statement,
         deprecated-sys-function,
         exception-escape,
         comprehension-escape,
+		R0201, # no-self-use
         C0114, # missing-module-docstring
         C0115, # missing-class-docstring
         C0116 # missing-function-docstring
@@ -363,6 +364,7 @@ good-names=i,
            j,
            k,
            ex,
+		   iv,
            Run,
            _
 
@@ -511,7 +513,7 @@ max-returns=6
 max-statements=50
 
 # Minimum number of public methods for a class (see R0903).
-min-public-methods=2
+min-public-methods=1
 
 
 [IMPORTS]

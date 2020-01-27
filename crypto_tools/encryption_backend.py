@@ -5,6 +5,7 @@ import random
 from .byte_data import ByteData
 from .aes import AesECB
 from .aes import AesCBC
+from .aes import AesCTR
 from .data_conversion import Base64Converter
 from .data_conversion import UTF8Converter
 
@@ -190,15 +191,16 @@ class CBCPaddingOracle(EncryptionBackend):
         return ByteData(string, Base64Converter())
 
     def encrypt(self, cleartext=False):
+        iv = self._generate_random_printable_key(self.key_size)
         if cleartext:
             cleartext_data = ByteData(cleartext, UTF8Converter())
             crypto = AesCBC(cleartext_data)
-            cipher = crypto.encrypt(self._key)
+            cipher = crypto.encrypt(self._key, iv)
         else:
-            crypto = AesCBC(self._random_data.pkcs7_pad(self.key_size))
-            cipher = crypto.encrypt(self._key)
+            crypto = AesCBC(self._random_data)
+            cipher = crypto.encrypt(self._key, iv)
 
-        return cipher
+        return cipher, iv
 
     def decrypt(self, cipher):
         cipher = AesCBC(cipher)
@@ -209,3 +211,28 @@ class CBCPaddingOracle(EncryptionBackend):
             return False
         else:
             return True
+
+
+class CTRFixedNonce(EncryptionBackend):
+    def __init__(self):
+        self.key_size = 16
+        self._key = self._generate_random_printable_key(self.key_size)
+
+    def encrypt(self, cleartext=False):
+        if cleartext:
+            cleartext_data = ByteData(cleartext, UTF8Converter())
+            crypto = AesCTR(cleartext_data)
+            cipher = crypto.encrypt(self._key)
+        else:
+            cipher = list()
+            with open('files/20.txt') as file:
+                for line in file:
+                    cleartext_data = ByteData(line, Base64Converter())
+                    crypto = AesCTR(cleartext_data)
+                    cipher_data = crypto.encrypt(self._key)
+                    cipher.append(cipher_data)
+
+        return cipher
+
+    def decrypt(self, cipher):
+        pass

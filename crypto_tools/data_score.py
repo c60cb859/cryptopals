@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import string
 
 
 class DataScore:
@@ -9,7 +10,10 @@ class DataScore:
         score = 0
         for char in cleartext:
             if char not in self._score_table:
-                score += self._undefined_score
+                if char in string.printable:
+                    score += self._undefined_score / 4
+                else:
+                    score += self._undefined_score
                 continue
             score += self._score_table[char]
         return score
@@ -22,7 +26,7 @@ class EnglishScore(DataScore):
                     'O': 3, 'o': 3,
                     'I': 4, 'i': 4,
                     'N': 5, 'n': 5,
-                    ' ': 6, ' ': 6,
+                    ' ': 6,
                     'S': 7, 's': 7,
                     'H': 8, 'h': 8,
                     'R': 9, 'r': 9,

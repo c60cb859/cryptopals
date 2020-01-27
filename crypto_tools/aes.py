@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from math import ceil
+
 from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import ECB
@@ -78,4 +80,30 @@ class AesCBC:
             cleartext += xored_block ^ prev_block
             prev_block = block
 
+        return cleartext
+
+
+class AesCTR:
+    def __init__(self, data, nonce=0):
+        self._data = data
+        self._nonce = nonce
+
+    def _get_int_little_endian(self, number):
+        return ByteData(int.to_bytes(number, length=8, byteorder='little'))
+
+    def encrypt(self, key):
+        key_size = len(key)
+        stream = ByteData()
+
+        for num in range(ceil(len(self._data)/key_size)):
+            stream_block = AesECB(self._get_int_little_endian(self._nonce) +
+                                  self._get_int_little_endian(num))
+            stream += stream_block.encrypt(key)
+
+        cipher = self._data ^ stream[:len(self._data)]
+
+        return cipher
+
+    def decrypt(self, key):
+        cleartext = self.encrypt(key)
         return cleartext

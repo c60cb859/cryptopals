@@ -25,6 +25,8 @@ from .data_score import EnglishScore
 
 from .repeating_xor import RepeatingXor
 
+from .mersenne_twister_rng import MersenneTwister19937
+
 __all__ = [
         'AesECB',
         'AesCBC',
@@ -44,5 +46,6 @@ __all__ = [
         'UTF8Converter',
         'IntConverter',
         'EnglishScore',
-        'RepeatingXor'
+        'RepeatingXor',
+        'MersenneTwister19937'
         ]
